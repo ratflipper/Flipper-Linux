@@ -33,15 +33,26 @@ jobs:
 
     - name: Build executable with PyInstaller
       run: |
-        pyinstaller --onefile --windowed Ratflipper.py \
-          --add-data "ratflipper.ico:." \
-          --icon=ratflipper.ico \
-          --name Ratflipper \
-          --hidden-import=requests \
-          --hidden-import=urllib3 \
-          --hidden-import=idna \
-          --hidden-import=charset_normalizer \
-          --hidden-import=certifi
+        if [ -f "ratflipper.ico" ]; then
+          pyinstaller --onefile --windowed Ratflipper.py \
+            --add-data "ratflipper.ico:." \
+            --icon=ratflipper.ico \
+            --name Ratflipper \
+            --hidden-import=requests \
+            --hidden-import=urllib3 \
+            --hidden-import=idna \
+            --hidden-import=charset_normalizer \
+            --hidden-import=certifi
+        else
+          echo "Warning: ratflipper.ico not found, building without icon"
+          pyinstaller --onefile --windowed Ratflipper.py \
+            --name Ratflipper \
+            --hidden-import=requests \
+            --hidden-import=urllib3 \
+            --hidden-import=idna \
+            --hidden-import=charset_normalizer \
+            --hidden-import=certifi
+        fi
 
     - name: Move executable to root
       run: mv dist/Ratflipper Ratflipper
